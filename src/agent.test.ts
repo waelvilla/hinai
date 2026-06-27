@@ -109,6 +109,27 @@ describe('agent evaluation', () => {
     });
   });
 
+  it('does not force the pricing design tool twice for the same request', () => {
+    const chatCtx = llm.ChatContext.empty();
+    const modelSettings: voice.ModelSettings = {};
+
+    chatCtx.addMessage({
+      role: 'user',
+      content: 'Can you show me the pricing design?',
+    });
+    chatCtx.insert(
+      llm.FunctionCall.create({
+        callId: 'pricing-design-call',
+        name: showPricingDesignsToolName,
+        args: '{}',
+      }),
+    );
+
+    applyPricingDesignToolChoice(chatCtx, modelSettings);
+
+    expect(modelSettings.toolChoice).toBeUndefined();
+  });
+
   it('does not force the pricing design tool for regular questions', () => {
     const chatCtx = llm.ChatContext.empty();
     const modelSettings: voice.ModelSettings = {};

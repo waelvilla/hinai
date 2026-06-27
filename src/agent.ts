@@ -49,23 +49,41 @@ export const showPricingDesigns = async (
   session.say(pricingDesignFollowUp, { addToChatCtx: true });
 };
 
-const getLatestUserText = (chatCtx: llm.ChatContext) => {
-  for (const item of [...chatCtx.items].reverse()) {
+const getLatestUserRequest = (chatCtx: llm.ChatContext) => {
+  for (let index = chatCtx.items.length - 1; index >= 0; index -= 1) {
+    const item = chatCtx.items[index];
+
+    if (!item) {
+      continue;
+    }
+
     if (item.type === 'message' && item.role === 'user') {
-      return item.textContent;
+      return {
+        text: item.textContent,
+        index,
+      };
     }
   }
 
   return undefined;
 };
 
+const hasPricingDesignToolCallAfter = (chatCtx: llm.ChatContext, itemIndex: number) =>
+  chatCtx.items
+    .slice(itemIndex + 1)
+    .some((item) => item.type === 'function_call' && item.name === showPricingDesignsToolName);
+
 export const applyPricingDesignToolChoice = (
   chatCtx: llm.ChatContext,
   modelSettings: voice.ModelSettings,
 ) => {
-  const latestUserText = getLatestUserText(chatCtx);
+  const latestUserRequest = getLatestUserRequest(chatCtx);
 
-  if (!latestUserText || !isPricingDesignScreenShareRequest(latestUserText)) {
+  if (
+    !latestUserRequest?.text ||
+    !isPricingDesignScreenShareRequest(latestUserRequest.text) ||
+    hasPricingDesignToolCallAfter(chatCtx, latestUserRequest.index)
+  ) {
     return;
   }
 
