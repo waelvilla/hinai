@@ -1,7 +1,12 @@
-import { dedent, inference, initializeLogger, voice } from '@livekit/agents';
+import { dedent, inference, initializeLogger, llm, voice } from '@livekit/agents';
 import dotenv from 'dotenv';
-import { afterEach, beforeEach, describe, it } from 'vitest';
-import { Agent } from './agent';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import {
+  Agent,
+  applyPricingDesignToolChoice,
+  getPricingDesignScreenShareResponse,
+  showPricingDesignsToolName,
+} from './agent';
 
 dotenv.config({ path: '.env.local' });
 
@@ -71,6 +76,51 @@ describe('agent evaluation', () => {
       });
 
     result.expect.noMoreEvents();
+  });
+
+  it('uses the prepared pricing design screen share response', () => {
+    expect(getPricingDesignScreenShareResponse('Can you show me the pricing design?')).toEqual({
+      intro: 'Sure let me share my screen!',
+      followUp:
+        'here you go, these are the latest designs from Yassin. Let me know if you have any questions.',
+    });
+
+    expect(getPricingDesignScreenShareResponse('Can you summarize the pricing design?')).toBe(
+      undefined,
+    );
+  });
+
+  it('forces the pricing design tool for screen share requests', () => {
+    const chatCtx = llm.ChatContext.empty();
+    const modelSettings: voice.ModelSettings = {};
+
+    chatCtx.addMessage({
+      role: 'user',
+      content: 'Can you show me the pricing design?',
+    });
+
+    applyPricingDesignToolChoice(chatCtx, modelSettings);
+
+    expect(modelSettings.toolChoice).toEqual({
+      type: 'function',
+      function: {
+        name: showPricingDesignsToolName,
+      },
+    });
+  });
+
+  it('does not force the pricing design tool for regular questions', () => {
+    const chatCtx = llm.ChatContext.empty();
+    const modelSettings: voice.ModelSettings = {};
+
+    chatCtx.addMessage({
+      role: 'user',
+      content: 'Can you summarize the pricing design?',
+    });
+
+    applyPricingDesignToolChoice(chatCtx, modelSettings);
+
+    expect(modelSettings.toolChoice).toBeUndefined();
   });
 
   /** Evaluation of the agent's ability to refuse to answer when it doesn't know something. */
