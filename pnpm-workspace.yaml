@@ -1,0 +1,5 @@
+allowBuilds:
+  '@ffmpeg-installer/darwin-arm64': true
+  '@livekit/local-inference': true
+  protobufjs: true
+  sharp: true
