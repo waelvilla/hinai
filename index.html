@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hinai Screen Presenter</title>
+    <style>
+      :root {
+        color: #f8fafc;
+        background: #0f172a;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      body {
+        display: grid;
+        min-height: 100vh;
+        margin: 0;
+        place-items: center;
+      }
+
+      main {
+        width: min(720px, calc(100vw - 32px));
+        padding: 32px;
+        border: 1px solid #334155;
+        border-radius: 20px;
+        background: #111827;
+        box-shadow: 0 24px 80px rgb(0 0 0 / 0.32);
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: 28px;
+      }
+
+      p {
+        margin: 0 0 24px;
+        color: #cbd5e1;
+        line-height: 1.5;
+      }
+
+      label {
+        display: grid;
+        gap: 8px;
+        margin-bottom: 16px;
+        color: #e2e8f0;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      input,
+      textarea {
+        box-sizing: border-box;
+        width: 100%;
+        border: 1px solid #475569;
+        border-radius: 12px;
+        background: #020617;
+        color: #f8fafc;
+        font: inherit;
+        padding: 12px 14px;
+      }
+
+      textarea {
+        min-height: 120px;
+        resize: vertical;
+      }
+
+      button {
+        border: 0;
+        border-radius: 999px;
+        background: #22c55e;
+        color: #052e16;
+        cursor: pointer;
+        font: inherit;
+        font-weight: 800;
+        padding: 12px 18px;
+      }
+
+      button:disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
+
+      #status {
+        margin-top: 18px;
+        color: #93c5fd;
+        font-size: 14px;
+        min-height: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Hinai Screen Presenter</h1>
+      <p>
+        Join the same LiveKit room as a separate presenter participant, then share this
+        browser's screen for the demo.
+      </p>
+
+      <form id="presenter-form">
+        <label>
+          LiveKit URL
+          <input
+            id="livekit-url"
+            name="livekitUrl"
+            placeholder="Auto-filled from LIVEKIT_URL when available"
+            required
+          />
+        </label>
+
+        <label>
+          Presenter token
+          <textarea
+            id="token"
+            name="token"
+            placeholder="Paste a token for the same room, using an identity like hinai-screen"
+            required
+          ></textarea>
+        </label>
+
+        <button id="share-button" type="submit">Join and Share Screen</button>
+      </form>
+
+      <div id="status" role="status">Ready.</div>
+    </main>
+
+    <script type="module" src="/src/presenter.ts"></script>
+  </body>
+</html>
