@@ -47,6 +47,32 @@ describe('agent evaluation', () => {
     result.expect.noMoreEvents();
   });
 
+  /** Evaluation of the agent's ability to answer pricing questions from project context. */
+  it('answers pricing page questions from the provided context', { timeout: 30000 }, async () => {
+    const result = await session
+      .run({ userInput: 'Which package is recommended, and how much does it cost monthly?' })
+      .wait();
+
+    await result.expect
+      .nextEvent()
+      .isMessage({ role: 'assistant' })
+      .judge(judgeLlm, {
+        intent: dedent`
+          Answers from the pricing page project context.
+
+          The response should:
+          - State that the Pro package is recommended
+          - State that Pro costs forty-nine dollars per month
+
+          The response should not:
+          - Invent a different recommended package
+          - Invent a different monthly price
+        `,
+      });
+
+    result.expect.noMoreEvents();
+  });
+
   /** Evaluation of the agent's ability to refuse to answer when it doesn't know something. */
   it('remains grounded to its actual knowledge', { timeout: 30000 }, async () => {
     // Run an agent turn following the user's request for information about their birth city (not known by the agent)

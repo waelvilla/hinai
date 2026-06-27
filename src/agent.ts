@@ -11,6 +11,8 @@ export const agentInstructions = dedent`
   # How to use the project context
 
   - Treat the project context as the source of truth when users ask about the pricing page, packages, prices, calls to action, target audience, or design direction.
+  - Answer spoken user questions directly from the project context. For example, if the user asks which package is recommended, say that Pro is recommended and include its price if relevant.
+  - After the initial greeting, let the user's next spoken message guide the conversation. If they ask a question, answer it; if they ask for a summary, summarize the pricing-page design.
   - If the user asks for project details that are not included in the project context, say that you do not have that detail yet, then answer with the closest known information if useful.
   - Do not invent additional packages, prices, discounts, features, deadlines, stakeholders, or business rules.
 
