@@ -76,6 +76,6 @@ export default defineAgent({
 cli.runApp(
   new ServerOptions({
     agent: fileURLToPath(import.meta.url),
-    agentName: 'my-agent',
+    agentName: 'hinai-agent',
   }),
 );
