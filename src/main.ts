@@ -3,6 +3,7 @@ import { audioEnhancement } from '@livekit/plugins-ai-coustics';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'node:url';
 import { Agent } from './agent';
+import { initialGreetingInstructions } from './greeting';
 
 // Load environment variables from a local file.
 // Make sure to set LIVEKIT_URL, LIVEKIT_API_KEY, and LIVEKIT_API_SECRET
@@ -66,7 +67,7 @@ export default defineAgent({
 
     // Greet the user on joining
     session.generateReply({
-      instructions: 'Greet the user in a helpful and friendly manner.',
+      instructions: initialGreetingInstructions,
     });
   },
 });
