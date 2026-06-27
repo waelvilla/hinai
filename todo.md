@@ -1,0 +1,5 @@
+- join call on your behalf
+- share screen/present
+- answer questions
+- take feedback and create tickets
+- send link in the chat
