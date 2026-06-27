@@ -32,6 +32,11 @@ const requireElement = <ElementType extends Element>(
   return element;
 };
 
+const canShareScreen = () => Boolean(navigator.mediaDevices?.getDisplayMedia);
+
+const screenShareHelp =
+  'Screen sharing requires a supported browser on a secure origin. Open this page at http://localhost:5173, not 0.0.0.0 or a LAN IP.';
+
 const connectAndShare = async (event: SubmitEvent) => {
   event.preventDefault();
 
@@ -40,6 +45,11 @@ const connectAndShare = async (event: SubmitEvent) => {
 
   if (!livekitUrl || !token) {
     setStatus('Add a LiveKit URL and presenter token first.');
+    return;
+  }
+
+  if (!canShareScreen()) {
+    setStatus(screenShareHelp);
     return;
   }
 
@@ -74,6 +84,10 @@ const connectAndShare = async (event: SubmitEvent) => {
 
 if (livekitUrlInput && defaultLivekitUrl) {
   livekitUrlInput.value = defaultLivekitUrl;
+}
+
+if (!canShareScreen()) {
+  setStatus(screenShareHelp);
 }
 
 requireElement(form, '#presenter-form').addEventListener('submit', connectAndShare);

@@ -223,3 +223,6 @@ ehthumbs.db
 
 # GitHub CLI
 .github/personal-instructions.md
+
+# Local demo helper scripts
+generate-presenter-token.sh
